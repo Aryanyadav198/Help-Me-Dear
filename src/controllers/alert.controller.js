@@ -128,6 +128,7 @@ const getAllAlerts = asyncHandler(async (req, res) => {
     user_name: alert.author.userName,
     user_avatar: alert.author.avatar || "", 
     time_ago: timeAgo(alert.createdAt),
+    created_at: alert.createdAt,
     severity: alert.severity,
     image_url: alert.imageUrl,
     location: alert.location,
