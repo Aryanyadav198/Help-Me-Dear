@@ -33,7 +33,7 @@ const createAlert = asyncHandler(async (req, res) => {
   const { severity, location, lat, lng, description } = req.body;
 
   // 2. Validate all fields including coordinates
-  if (!severity || !location || !lat || !lng || !description) {
+  if (!severity || !location || !lat || !lng ) {
     throw new ApiErrors(400, "Severity, location, lat, lng, and description are required");
   }
 
