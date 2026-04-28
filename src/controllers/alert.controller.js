@@ -125,6 +125,7 @@ const getAllAlerts = asyncHandler(async (req, res) => {
   // Format exactly to Flutter model requirements, including lat and lng
   const formattedAlerts = alerts.map((alert) => ({
     id: alert._id.toString(),
+    user_id: alert.user.toString(),
     user_name: alert.author.userName,
     user_avatar: alert.author.avatar || "", 
     time_ago: timeAgo(alert.createdAt),

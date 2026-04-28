@@ -36,14 +36,15 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 
   // Check duplicates
-  const orQuery = [{ userName }];
+//   const orQuery = [{ userName }];
+  const orQuery = [];
   if (email) orQuery.push({ email });
   if (phone) orQuery.push({ phone });
 
   const existing = await User.findOne({ $or: orQuery });
   if (existing) {
-    if (existing.userName === userName)
-      throw new ApiErrors(409, "Username already taken");
+    // if (existing.userName === userName)
+    //   throw new ApiErrors(409, "Username already taken");
     if (email && existing.email === email)
       throw new ApiErrors(409, "Email already registered");
     if (phone && existing.phone === phone)
@@ -56,9 +57,14 @@ const registerUser = asyncHandler(async (req, res) => {
     const uploaded = await uploadOnCloudinary(req.file.path);
     if (uploaded) avatarUrl = uploaded.url;
   }
+  let finalUserName = userName;
+
+  if (!finalUserName || finalUserName.trim() === "") {
+    finalUserName = fullName.replace(/\s+/g, '').toLowerCase() + "_" + Date.now();
+  }
 
   const user = await User.create({
-    userName: userName.toLowerCase(),
+    userName: finalUserName,
     fullName,
     email: email || undefined,
     phone: phone || undefined,
