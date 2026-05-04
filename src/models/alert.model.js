@@ -23,11 +23,11 @@ const alertSchema = new Schema(
     },
     lat: {
       type: Number, // Latitude
-      required: true,
+    //   required: true,
     },
     lng: {
       type: Number, // Longitude
-      required: true,
+    //   required: true,
     },
     description: {
       type: String,

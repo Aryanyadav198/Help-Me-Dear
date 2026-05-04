@@ -33,9 +33,12 @@ const createAlert = asyncHandler(async (req, res) => {
   const { severity, location, lat, lng, description } = req.body;
 
   // 2. Validate all fields including coordinates
-  if (!severity || !location || !lat || !lng ) {
-    throw new ApiErrors(400, "Severity, location, lat, lng, and description are required");
-  }
+//   if (!severity || !location || !lat || !lng ) {
+//     throw new ApiErrors(400, "Severity, location, lat, lng, and description are required");
+//   }
+    if (!severity || !location) {
+        throw new ApiErrors(400, "Severity and location are required");
+    }
 
   if (!req.file?.path) {
     throw new ApiErrors(400, "Evidence image is required");
@@ -47,23 +50,32 @@ const createAlert = asyncHandler(async (req, res) => {
   }
 
   // 3. Save coordinates as floats
-  const alert = await Alert.create({
+//   const alert = await Alert.create({
+//     user: req.user._id,
+//     severity,
+//     location,
+//     lat: parseFloat(lat),
+//     lng: parseFloat(lng),
+//     description,
+//     imageUrl: uploadedImage.url,
+//   });
+const alert = await Alert.create({
     user: req.user._id,
     severity,
     location,
-    lat: parseFloat(lat),
-    lng: parseFloat(lng),
+    lat: lat != null ? parseFloat(lat) : undefined,  // omit if missing
+    lng: lng != null ? parseFloat(lng) : undefined,
     description,
     imageUrl: uploadedImage.url,
   });
-  await sendNotificationToAllUsers({
-    title: "🚨 New Alert",
-    body: `${location} - ${severity}`,
-    data: {
-      type: "alert",
-      alertId: alert._id.toString(),
-    },
-  });
+//   await sendNotificationToAllUsers({
+//     title: "🚨 New Alert",
+//     body: `${location} - ${severity}`,
+//     data: {
+//       type: "alert",
+//       alertId: alert._id.toString(),
+//     },
+//   });
 
   return res.status(201).json(new ApiResponse(201, "Alert posted successfully", alert));
 });
